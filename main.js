@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+require('dotenv').config()
 
 const app = express()
 
@@ -14,7 +15,7 @@ const User = require('./src/models/user.model')
 //     res.send('Hello world!')
 // })
 
-mongoose.connect('mongodb+srv://josefina:josefina@clustercero.ea9ggib.mongodb.net/elFacon_Db')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Conectada a la base de datos')
         app.listen(port, () => {
