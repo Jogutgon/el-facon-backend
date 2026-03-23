@@ -29,3 +29,8 @@ const register = async (req, res) => {
 
     //generar estado
 }
+
+
+module.exports = {
+    register
+}
