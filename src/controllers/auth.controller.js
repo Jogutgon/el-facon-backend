@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user.model')
 
-const register = async (req, res) => {
+const registerUser = async (req, res) => {
     //campos de donde vienen los datos
     const {
         username,
@@ -32,5 +32,5 @@ const register = async (req, res) => {
 
 
 module.exports = {
-    register
+    registerUser
 }
