@@ -51,9 +51,21 @@ const loginUser = async (req, res) => {
         //estado
         return res.json({ message: "Sin autorización" })
     }
+
+    const token = jwt.sign({
+        id: user._id,
+        username: user.username,
+        isAdmin: user.isAdmin
+    }, JWT_SECRET);
+
+    //estados
+    res.json({
+        access_token: token
+    })
 }
 
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }
