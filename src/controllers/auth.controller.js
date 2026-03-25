@@ -30,6 +30,28 @@ const registerUser = async (req, res) => {
     //generar estado
 }
 
+const loginUser = async (req, res) => {
+    const {
+        username,
+        password
+    } = req.body
+
+    //comprobar si existe el usuario
+    const user = await User.findOne({ username })
+    if (user === null){
+        //estado
+        return res.json({ message: "Usuario no encontrado"})
+    }
+
+    //comparar password con bcrypt
+    const isMatch = bcrypt.compareSync(password, user.password)
+
+    if(!isMatch) {
+        //estado
+        return res.json({ message: "Sin autorización" })
+    }
+}
+
 
 module.exports = {
     registerUser
