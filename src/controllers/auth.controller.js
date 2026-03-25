@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user.model')
+const jwt = require('jsonwebtoken')
 
 const registerUser = async (req, res) => {
     //campos de donde vienen los datos
@@ -30,7 +31,41 @@ const registerUser = async (req, res) => {
     //generar estado
 }
 
+const loginUser = async (req, res) => {
+    const {
+        username,
+        password
+    } = req.body
+
+    //comprobar si existe el usuario
+    const user = await User.findOne({ username })
+    if (user === null){
+        //estado
+        return res.json({ message: "Usuario no encontrado"})
+    }
+
+    //comparar password con bcrypt
+    const isMatch = bcrypt.compareSync(password, user.password)
+
+    if(!isMatch) {
+        //estado
+        return res.json({ message: "Sin autorización" })
+    }
+
+    const token = jwt.sign({
+        id: user._id,
+        username: user.username,
+        isAdmin: user.isAdmin
+    }, JWT_SECRET);
+
+    //estados
+    res.json({
+        access_token: token
+    })
+}
+
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }
