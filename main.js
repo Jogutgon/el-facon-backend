@@ -9,9 +9,11 @@ const reservationRouter = require('./src/routes/reservation.routes')
 const app = express()
 const port = 7000
 
+app.use(express.json())
+
 
 //http://localhost:7000/
-//dominios
+//rutas
 app.use('/auth', authRouter)
 app.use('/reservation', reservationRouter)
 
