@@ -1,4 +1,4 @@
 const { Router } = require('express')
 
-//http://localhost:8000/auth
+//http://localhost:7000/auth
 const authRouter = Router()
