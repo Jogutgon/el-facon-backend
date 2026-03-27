@@ -18,10 +18,6 @@ app.use('/auth', authRouter)
 app.use('/reservation', reservationRouter)
 
 
-// app.get('/', (req, res) => {
-//     res.send('Hello world!')
-// })
-
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Conectada a la base de datos')

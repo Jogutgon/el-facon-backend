@@ -20,6 +20,12 @@ const verifyJWT = (req, res, next) => {
 
 }
 
+//Validar que el usuario es Admin
+
+
+
+
+
 module.exports = {
     verifyJWT
 }
