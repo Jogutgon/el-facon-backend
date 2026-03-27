@@ -3,7 +3,7 @@ const JWT_SECRET = require('../common/constants')
 
 const verifyJWT = (req, res, next) => {
 
-    if(!req.header.authorization)
+    if(!req.headers.authorization)
         return res.json({message: 'Unauthorized'})
 
     const authorization = req.headers.authorization
@@ -14,6 +14,7 @@ const verifyJWT = (req, res, next) => {
         return res.json({message: 'Token invalido'});
        } 
        //si el token es valido, se guardan los datos del usuario en req
+       req.user = decoded;
        next();
     })
 
