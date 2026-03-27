@@ -2,14 +2,21 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-const app = express()
+//conexion a rutas
+const authRouter = require('./src/routes/auth.routes')
+const reservationRouter = require('./src/routes/reservation.routes')
 
+const app = express()
 const port = 7000
 
+app.use(express.json())
 
-const User = require('./src/models/user.model')
 
 //http://localhost:7000/
+//rutas
+app.use('/auth', authRouter)
+app.use('/reservation', reservationRouter)
+
 
 // app.get('/', (req, res) => {
 //     res.send('Hello world!')
