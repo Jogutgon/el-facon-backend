@@ -21,6 +21,9 @@ app.use('/reservation', reservationRouter)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Conectada a la base de datos')
+
+        createAdmin();
+
         app.listen(port, () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
