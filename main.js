@@ -5,6 +5,7 @@ require('dotenv').config()
 //conexion a rutas
 const authRouter = require('./src/routes/auth.routes')
 const reservationRouter = require('./src/routes/reservation.routes')
+const createAdmin = require('./src/utils/createAdmin')
 
 const app = express()
 const port = 7000
@@ -22,10 +23,13 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Conectada a la base de datos')
 
-        createAdmin();
+        createAdmin()
 
         app.listen(port, () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
+        
+        
+        
     })
     .catch(()=> console.log('NO SE PUDO CONECTAR LA APP CON LA BD'))

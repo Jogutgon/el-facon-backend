@@ -5,11 +5,16 @@ const createAdmin = async () => {
 
     if(!exists) {
         await User.create({ 
+            username: "administrator1",
             email: "admin@admin.com",
             password: "12345abcd",
-            isAdmin: true
+            firstName: "admin",
+            lastName: "principal",
+            isAdmin: true,
+            status: true
         });
         res.json({ message: "Admin creado"})
+        console.log("Admin creado")
     }
 }
 
