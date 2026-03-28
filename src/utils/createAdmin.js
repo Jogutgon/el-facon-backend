@@ -1,19 +1,23 @@
 const User = require('../models/user.model')
+const bcrypt = require('bcrypt')
 
 const createAdmin = async () => {
     const exists = await User.findOne( { email: "admin@admin.com" });
+
+    const salt = bcrypt.genSaltSync(8);
+    const hashedPassword = bcrypt.hashSync("12345abcd", salt);
 
     if(!exists) {
         await User.create({ 
             username: "administrator1",
             email: "admin@admin.com",
-            password: "12345abcd",
+            password: hashedPassword,
             firstName: "admin",
             lastName: "principal",
             isAdmin: true,
             status: true
         });
-        res.json({ message: "Admin creado"})
+        
         console.log("Admin creado")
     }
 }
