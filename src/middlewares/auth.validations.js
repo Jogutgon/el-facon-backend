@@ -11,7 +11,7 @@ const verifyJWT = (req, res, next) => {
 
     jwt.verify(token, JWT_SECRET,(err, decoded) => {
        if(err) {
-        return res.json({message: 'Token invalido'});
+        return res.status(401).json({message: 'Token invalido'});
        } 
        //si el token es valido, se guardan los datos del usuario en req
        req.user = decoded;
