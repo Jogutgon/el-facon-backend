@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
+const cors = require('cors')
 
 //conexion a rutas
 const authRouter = require('./src/routes/auth.routes')
@@ -8,6 +9,7 @@ const reservationRouter = require('./src/routes/reservation.routes')
 const createAdmin = require('./src/utils/createAdmin')
 
 const app = express()
+app.use(cors())
 const port = 7000
 
 app.use(express.json())
