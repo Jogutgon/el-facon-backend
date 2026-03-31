@@ -51,7 +51,7 @@ const loginUser = async (req, res) => {
     const isMatch = bcrypt.compareSync(password, user.password)
 
     if(!isMatch) {
-        //estado
+        res.status(401)
         return res.json({ message: "Sin autorización" })
     }
 
@@ -61,7 +61,7 @@ const loginUser = async (req, res) => {
         isAdmin: user.isAdmin
     }, JWT_SECRET);
 
-    //estados
+    res.status(200)
     res.json({
         access_token: token
     })

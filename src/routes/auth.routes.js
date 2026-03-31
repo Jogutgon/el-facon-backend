@@ -14,7 +14,4 @@ authRouter.post('/login',
     loginUser
  )
 
-
-
-
 module.exports = authRouter

@@ -1,12 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
+const cors = require('cors')
 
 //conexion a rutas
 const authRouter = require('./src/routes/auth.routes')
 const reservationRouter = require('./src/routes/reservation.routes')
+const createAdmin = require('./src/utils/createAdmin')
 
 const app = express()
+app.use(cors())
 const port = 7000
 
 app.use(express.json())
@@ -18,15 +21,17 @@ app.use('/auth', authRouter)
 app.use('/reservation', reservationRouter)
 
 
-// app.get('/', (req, res) => {
-//     res.send('Hello world!')
-// })
-
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log('Conectada a la base de datos')
+
+        createAdmin()
+
         app.listen(port, () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
+        
+        
+        
     })
     .catch(()=> console.log('NO SE PUDO CONECTAR LA APP CON LA BD'))
