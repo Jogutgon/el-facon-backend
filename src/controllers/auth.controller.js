@@ -36,12 +36,12 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const {
-        username,
+        email,
         password
     } = req.body
 
     //comprobar si existe el usuario
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ email })
     if (user === null){
         //estado
         return res.json({ message: "Usuario no encontrado"})
@@ -57,7 +57,7 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({
         id: user._id,
-        username: user.username,
+        email: user.email,
         isAdmin: user.isAdmin
     }, JWT_SECRET);
 
