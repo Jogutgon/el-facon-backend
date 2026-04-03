@@ -1,8 +1,23 @@
 const { Router } = require('express')
+const { createReservation, getReservation } = require('../controllers/reservation.controller')
+const { verifyJWT } = require('../middlewares/auth.validations')
 
 
 //http://localhost:7000/reservation
 const reservationRouter = Router()
+
+reservationRouter.post('/create', 
+    [], 
+    verifyJWT,
+createReservation
+)
+
+reservationRouter.get('/my-reservation', 
+    [],
+    verifyJWT,
+    getReservation
+
+)
 
 
 module.exports = reservationRouter
