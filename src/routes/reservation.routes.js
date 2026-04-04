@@ -6,7 +6,7 @@ const { verifyJWT } = require('../middlewares/auth.validations')
 //http://localhost:7000/reservation
 const reservationRouter = Router()
 
-reservationRouter.post('/create', 
+reservationRouter.post('/', 
     [], 
     verifyJWT,
 createReservation
