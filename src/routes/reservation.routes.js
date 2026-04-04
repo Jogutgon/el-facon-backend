@@ -12,7 +12,7 @@ reservationRouter.post('/create',
 createReservation
 )
 
-reservationRouter.get('/my-reservation', 
+reservationRouter.get('/all-reservations', 
     [],
     verifyJWT,
     getReservation
