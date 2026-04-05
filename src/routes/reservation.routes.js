@@ -12,6 +12,12 @@ reservationRouter.post('/',
 createReservation
 )
 
+
+reservationRouter.get('/avalability', 
+    verifyJWT
+)
+
+
 reservationRouter.get('/all-reservations', 
     [],
     verifyJWT,
