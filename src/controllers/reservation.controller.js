@@ -31,6 +31,28 @@ const createReservation = async (req, res) => {
 }
 
 
+const availableReservation = async (req, res) => {
+    const {
+        date,
+        time
+    } = req.query
+
+    const reservationsDate = await Reservation.find({ date });
+
+    const fixedHours = [ 
+        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
+    ]
+
+    const timeReservation = reservationsDate.map( reserv => reserv.time)
+
+    res.json(timeReservation)
+
+
+
+}
+
+
 //traer la reserva del usuario logueado
 const getReservation = async (req, res) => {
     try {
@@ -47,5 +69,6 @@ const getReservation = async (req, res) => {
 
 module.exports = {
     createReservation,
+    availableReservation,
     getReservation
 }
