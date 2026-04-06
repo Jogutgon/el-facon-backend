@@ -32,23 +32,34 @@ const createReservation = async (req, res) => {
 
 
 const availableReservation = async (req, res) => {
-    const {
+   try {
+     const {
         date,
-        time
-    } = req.query
-
-    const reservationsDate = await Reservation.find({ date });
+    } = req.query;
 
     const fixedHours = [ 
         "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
         "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
-    ]
-
-    const timeReservation = reservationsDate.map( reserv => reserv.time)
-
-    res.json(timeReservation)
+    ];
 
 
+    const reservationsDate = await Reservation.find({date})
+
+
+    const reservedTimes = reservationsDate.map( reserv => reserv.time)
+
+    const availableTime = fixedHours.map( time => ({
+        time, 
+        available: !reservedTimes.includes(time)
+    })); 
+    
+
+    res.json(availableTime);
+
+   } catch (error) {
+    res.status(500).json({mensaje: "No se pudo mostrar la disponibilidad"})
+    console.error({message: "No se pudo mostrar la disponibilidad"})
+   }
 
 }
 
