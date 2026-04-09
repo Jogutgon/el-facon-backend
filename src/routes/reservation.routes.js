@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { createReservation, getReservation } = require('../controllers/reservation.controller')
+const { createReservation, getReservation, availableReservation } = require('../controllers/reservation.controller')
 const { verifyJWT } = require('../middlewares/auth.validations')
 
 
@@ -11,6 +11,13 @@ reservationRouter.post('/',
     verifyJWT,
 createReservation
 )
+
+
+reservationRouter.get('/availability', 
+    verifyJWT,
+    availableReservation
+)
+
 
 reservationRouter.get('/all-reservations', 
     [],
