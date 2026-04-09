@@ -8,6 +8,39 @@ const createReservation = async (req, res) => {
             guests
         } = req.body
 
+
+        const today = new Date(); 
+        today.setHours(0, 0, 0, 0) 
+
+        const now = new Date() 
+
+        const selectDate = new Date(`${date}T${time}`)
+       
+
+        const [year, month, day] = date.split("-");
+        const onlyDate = new Date(year, month - 1, day);  
+        onlyDate.setHours(0, 0, 0, 0)
+
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + 3);  
+        maxDate.setHours(23, 59, 59, 999)           
+
+        if(onlyDate < today){ //fecha menor a fecha de hoy
+            res.status(400)
+            return res.json({messasge: "No podes reservar fechas pasadas"})
+        }
+        
+        if(selectDate > maxDate){ 
+            res.status(400)
+            return res.json({message: "Solo podes reservar hasta 3 días adelante"})
+        }
+
+        if(selectDate < now) { 
+            res.status(400)
+            return res.json({message: "No podes reservar en horarios pasados"})
+        }
+
+
         const existingReservation = await Reservation.findOne({date: req.body.date, time: req.body.time})
         if (existingReservation){
             res.status(400)
