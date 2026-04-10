@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { createReservation, getReservation, availableReservation } = require('../controllers/reservation.controller')
+const { createReservation, getReservation, availableReservation, deleteReservationById } = require('../controllers/reservation.controller')
 const { verifyJWT } = require('../middlewares/auth.validations')
 
 
@@ -24,6 +24,11 @@ reservationRouter.get('/all-reservations',
     verifyJWT,
     getReservation
 
+)
+//http://localhost:7000/reservation/delete-by-id/:id
+reservationRouter.delete('/delete-by-id/:id', 
+    verifyJWT,
+    deleteReservationById
 )
 
 
