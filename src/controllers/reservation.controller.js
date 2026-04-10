@@ -120,7 +120,7 @@ const deleteReservationById = async (req, res) => {
             return res.json({ message: "Reserva no encontrada" })
         }
 
-         //es del mismo usuario q eliminara su reserva? o admin?
+         
         if(reservation.user.toString() !== req.user.id && !req.user.isAdmin){
             res.status(403)
             return res.json({message: "No autorizado"})
