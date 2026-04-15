@@ -6,7 +6,9 @@ const cors = require('cors')
 //conexion a rutas
 const authRouter = require('./src/routes/auth.routes')
 const reservationRouter = require('./src/routes/reservation.routes')
+const adminRouter = require('./src/routes/admin.routes')
 const createAdmin = require('./src/utils/createAdmin')
+
 
 const app = express()
 app.use(cors())
@@ -19,6 +21,7 @@ app.use(express.json())
 //rutas
 app.use('/auth', authRouter)
 app.use('/reservation', reservationRouter)
+app.use('/admin', adminRouter)
 
 
 mongoose.connect(process.env.MONGO_URI)
