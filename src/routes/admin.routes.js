@@ -1,10 +1,21 @@
 const { Router } = require('express')
+const { verifyJWT } = require('../middlewares/auth.validations')
+const { findAllUsers } = require('../controllers/admin.controller')
 
 
-//http://localhost:7000/auth
+//http://localhost:7000/admin
 const adminRouter = Router()
 
-adminRouter.get('/')
+//http://localhost:7000/admin/users
+adminRouter.get('/users',
+    verifyJWT, 
+    findAllUsers 
+)
+
+adminRouter.get('/reservations',
+    verifyJWT 
+
+)
 
 
 
