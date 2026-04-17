@@ -34,9 +34,39 @@ const findAllUsers = async (req, res) => {
 }
 
 
+const updateUser = async (req, res) => {
+    try {
+    
+        const updateUser = await User.findByIdAndUpdate(
+            req.params.id, 
+            {
+            firstName: req.body.firstName, 
+            lastName: req.body.lastName,
+            email: req.body.email,
+        },
+            {new: true}).select('-password')
+
+        if(!updateUser) {
+            return res.status(400).json({
+                message: "USUARIO NO ENCONTRADO"
+            })
+        }
+
+        res.status(200)
+        res.json({message: "USUARIO ACTUALIZADO", data: updateUser})
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error actualizar usuario"
+        })
+    }
+}
+
+
 
 module.exports = {
-    findAllUsers
+    findAllUsers,
+    updateUser
 }
 
 
