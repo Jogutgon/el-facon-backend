@@ -18,7 +18,7 @@ adminRouter.put('/users/:id',
 )
 
 
-adminRouter.patch('/users/:id', 
+adminRouter.patch('/users/:id/status', 
     verifyJWT,
     suspendUser
 )

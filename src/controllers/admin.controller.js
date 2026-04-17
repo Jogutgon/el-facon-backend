@@ -62,19 +62,30 @@ const updateUser = async (req, res) => {
     }
 }
 
-const suspendUser = async (req, res) => {
+const statusUser = async (req, res) => {
     
     try {
-        const suspend = await User.findByIdAndUpdate(
-            req.params.id,
-            {
-                status: false
-            }
-        )
 
-        if(suspend === null) {
+        const { status } = req.body
+
+        if(typeof status !== 'boolean'){
+            res.status(400)
+            return res.json({message: "El campus status debe ser true o false"})
+        }
+
+        const updateStatus = await User.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            {new: true}
+        ).select('-password')
+
+        if(updateStatus === null) {
             res.status(400).json({message: "USUARIO NO ENCONTRADO"})
         }
+
+        res.status(200)
+        return res.json({message: `Usuario ${status ? 'activado' : 'suspendido' }`, data: updateStatus});
+
     } catch (error) {
         res.status(500).json({
             message: "Error al suspender usuario"
