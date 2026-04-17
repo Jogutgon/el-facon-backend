@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { verifyJWT } = require('../middlewares/auth.validations')
-const { findAllUsers, updateUser } = require('../controllers/admin.controller')
+const { findAllUsers, updateUser, suspendUser } = require('../controllers/admin.controller')
 
 
 //http://localhost:7000/admin
@@ -15,6 +15,12 @@ adminRouter.get('/users',
 adminRouter.put('/users/:id', 
     verifyJWT,
     updateUser
+)
+
+
+adminRouter.patch('/users/:id', 
+    verifyJWT,
+    suspendUser
 )
 
 adminRouter.get('/reservations',
