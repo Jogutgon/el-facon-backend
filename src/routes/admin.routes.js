@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const { verifyJWT } = require('../middlewares/auth.validations')
-const { findAllUsers, updateUser, suspendUser } = require('../controllers/admin.controller')
+const { findAllUsers, updateUser, statusUser, deleteUserById } = require('../controllers/admin.controller')
 
 
 //http://localhost:7000/admin
@@ -20,7 +20,12 @@ adminRouter.put('/users/:id',
 
 adminRouter.patch('/users/:id/status', 
     verifyJWT,
-    suspendUser
+    statusUser
+)
+
+adminRouter.delete('/deleteUser-by-id/:id', 
+    verifyJWT,
+    deleteUserById
 )
 
 adminRouter.get('/reservations',

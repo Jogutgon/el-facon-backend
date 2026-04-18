@@ -94,11 +94,30 @@ const statusUser = async (req, res) => {
 }
 
 
+const deleteUserById = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const deletedUser = await User.findByIdAndDelete(id).select('-password')
+
+        if (deletedUser === null) {
+            return res.status(400).json({message: "Usuario no encontrado"})
+        } 
+
+        return res.status(200).json({message: "Usuario eliminado"})
+
+    } catch (error) {
+        res.status(500).json({message: "Error al eliminar el usuario"})
+    }
+}
+
+
 
 module.exports = {
     findAllUsers,
     updateUser,
-    suspendUser
+    statusUser,
+    deleteUserById
 }
 
 
