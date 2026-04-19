@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const { verifyJWT } = require('../middlewares/auth.validations')
 const { findAllUsers, updateUser, statusUser, deleteUserById } = require('../controllers/admin.controller')
+const { AllReservations } = require('../controllers/reservation.controller')
 
 
 //http://localhost:7000/admin
@@ -29,7 +30,8 @@ adminRouter.delete('/deleteUser-by-id/:id',
 )
 
 adminRouter.get('/reservations',
-    verifyJWT 
+    verifyJWT,
+    AllReservations
 
 )
 

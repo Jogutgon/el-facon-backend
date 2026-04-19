@@ -137,11 +137,85 @@ const deleteReservationById = async (req, res) => {
     }
 };
 
+const AllReservations = async (req, res) => {
+    try {
+        
+        const { date, time, guests, firstName, lastName } = req.query;
+
+        const filter = {};
+
+        if(date) {
+            const startOfDay = new Date(date);
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+            filter.date = { $gte: startOfDay, $lte: endOfDay}
+        }
+
+        if(time) filter.time = time;
+        if(guests) filter.guests = Number(guests);
+
+        let reservations = await Reservation.find(filter)
+        .populate('user', 'firstName lastName');
+
+        if(firstName){
+            reservations = reservations.filter( r => 
+                r.user?.firstName?.match(new RegExp(firstName, 'i')))
+        }
+
+        if(lastName){
+            reservations = reservations.filter( r =>
+                r.user?.lastName?.match(new RegExp(lastName, 'i'))
+            )
+        }
+
+        return res.status(200).json({
+            message: "Reservas encontradas",
+            total: reservations.length,
+            data: reservations
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({message: "ERROR AL BUSCAR RESERVAS"})
+    }
+    
+}
 
 
 module.exports = {
     createReservation,
     availableReservation,
     getReservation,
-    deleteReservationById
+    deleteReservationById,
+    AllReservations
 }
+
+
+// try {
+
+    //     const {
+    //         user,
+    //         date,
+    //         time,
+    //         guests
+    //     } = req.query
+
+    //     const filter = { user }
+
+    //     if(firstName){
+    //         filter.firstName = {$regex: new RegExp(firstName, 'i')}
+    //     }
+
+    //     if(lastName){
+    //         filter.lastName = {$regex: new RegExp(lastName, 'i')}
+    //     }
+
+    //     const reservations = await Reservation.find( filter )
+
+    //     return res.status(200).json({message: "Find reservations", data: reservations})
+
+
+    // } catch (error) {
+    //     res.status(500)
+    //     return res.json({message: "ERROR AL BUSCAR RESERVAS"})
+    // }
