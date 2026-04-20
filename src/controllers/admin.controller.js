@@ -53,7 +53,7 @@ const updateUser = async (req, res) => {
         }
 
         res.status(200)
-        res.json({message: "USUARIO ACTUALIZADO", data: updateUser})
+        return res.json({message: "USUARIO ACTUALIZADO", data: updateUser})
 
     } catch (error) {
         res.status(500).json({
