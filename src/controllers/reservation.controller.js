@@ -121,7 +121,7 @@ const deleteReservationById = async (req, res) => {
         }
 
          
-        if(reservation.user.toString() !== req.user.id && !req.user.isAdmin){
+        if(reservation.user.toString() !== req.user.id){
             res.status(403)
             return res.json({message: "No autorizado"})
         }
@@ -133,15 +133,133 @@ const deleteReservationById = async (req, res) => {
 
     } catch (error) {
         res.status(500)
-        // return res.json({message: "Error al cancelar la reserva"})
+        return res.json({message: "Error al cancelar la reserva"})
     }
 };
 
+const AllReservations = async (req, res) => {
+    try {
+        
+        const { date, time, guests, firstName, lastName } = req.query;
+
+        const filter = {};
+
+        if(date) {
+            const startOfDay = new Date(date);
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+            filter.date = { $gte: startOfDay, $lte: endOfDay}
+        }
+
+        if(time) filter.time = time;
+        if(guests) filter.guests = Number(guests);
+
+        let reservations = await Reservation.find(filter)
+        .populate('user', 'firstName lastName');
+
+        if(firstName){
+            reservations = reservations.filter( r => 
+                r.user?.firstName?.match(new RegExp(firstName, 'i')))
+        }
+
+        if(lastName){
+            reservations = reservations.filter( r =>
+                r.user?.lastName?.match(new RegExp(lastName, 'i'))
+            )
+        }
+
+        return res.status(200).json({
+            message: "Reservas encontradas",
+            total: reservations.length,
+            data: reservations
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({message: "ERROR AL BUSCAR RESERVAS"})
+    }
+    
+}
+
+const updateReservation = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { date, time, guests} = req.body
+
+        const updateData = {};
+
+        if(date !== undefined) updateData.date = date;
+        if(time !== undefined) updateData.time = time;
+
+        if(guests !== undefined) {
+            if(guests < 2 || guests > 10) {
+                return res.status(400).json({
+                    message: "Cantidad de comensales inválida"
+                })
+            }
+            updateData.guests = guests;
+        }
+        
+        const updateReserv = await Reservation.findByIdAndUpdate(
+            id, 
+            updateData,
+            { new: true, 
+                runValidators: true
+            }
+        );
+
+        if(!updateReserv){
+            return res.status(404).json({
+                message: "Reserva no encontrada"
+            })
+        }
+
+        return res.status(200).json({
+            message: "Reserva actualizada", data: updateReserv
+        })
+
+    } catch (error) {
+       console.error(error)
+       return res.status(500).json({
+        message: "ERROR AL ACTUALIZAR RESERVA"}) 
+    }
+
+}
+
+
+const deleteReservationByAdmin = async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            const reservation = await Reservation.findByIdAndDelete(id);
+
+            if(!reservation) {
+                return res.status(404).json({
+                    message: "Reserva no encontrada"
+                })
+            }
+            
+            return res.status(200).json({
+                message: "Reserva eliminada"
+            })
+
+        } catch (error) {
+            console.error(error)
+            res.status(500).json({
+                message: "ERROR AL ELIMINAR LA RESERVA"
+            })
+            
+        }
+    }
 
 
 module.exports = {
     createReservation,
     availableReservation,
     getReservation,
-    deleteReservationById
+    deleteReservationById,
+    AllReservations,
+    updateReservation,
+    deleteReservationByAdmin
 }
+
