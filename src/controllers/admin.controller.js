@@ -2,11 +2,8 @@ const Reservation = require('../models/reservation.model')
 const User = require('../models/user.model')
 
 
-//encontrar todos los usuarios
-
 const findAllUsers = async (req, res) => {
     try {
-
         const {
             firstName,
             lastName
@@ -17,18 +14,19 @@ const findAllUsers = async (req, res) => {
         if(firstName) {
             filter.firstName = { $regex: new RegExp(firstName, 'i') }
         }
-
         if(lastName) {
             filter.lastName = { $regex: new RegExp(lastName, 'i')}
         }
 
         const users = await User.find(filter).select('-password')
-
-        return res.status(200).json({message: "Find all users", data: users})
+        return res.status(200).json({
+            message: "Usuarios encontrados", 
+            data: users
+        })
     
     } catch (error) {
         res.status(500).json({
-            message: "Error buscando usuarios"
+            message: "Error al buscar usuarios"
         })
     }
 }
@@ -36,28 +34,30 @@ const findAllUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-    
         const updateUser = await User.findByIdAndUpdate(
             req.params.id, 
             {
             firstName: req.body.firstName, 
             lastName: req.body.lastName,
             email: req.body.email,
+            username: req.body.username
         },
             {new: true}).select('-password')
 
         if(!updateUser) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: "USUARIO NO ENCONTRADO"
             })
         }
 
-        res.status(200)
-        return res.json({message: "USUARIO ACTUALIZADO", data: updateUser})
+        return res.status(200).json({
+            message: "Usuario actualizado", 
+            data: updateUser
+        });
 
     } catch (error) {
         res.status(500).json({
-            message: "Error actualizar usuario"
+            message: "Error al actualizar usuario"
         })
     }
 }
@@ -65,12 +65,11 @@ const updateUser = async (req, res) => {
 const statusUser = async (req, res) => {
     
     try {
-
         const { status } = req.body
 
         if(typeof status !== 'boolean'){
             res.status(400)
-            return res.json({message: "El campus status debe ser true o false"})
+            return res.json({message: "El campo status debe ser true o false"})
         }
 
         const updateStatus = await User.findByIdAndUpdate(
@@ -80,12 +79,15 @@ const statusUser = async (req, res) => {
         ).select('-password')
 
         if(updateStatus === null) {
-            res.status(400).json({message: "USUARIO NO ENCONTRADO"})
+            return res.status(404).json({
+                message: "Usuario no encontrado"})
         }
 
-        res.status(200)
-        return res.json({message: `Usuario ${status ? 'activado' : 'suspendido' }`, data: updateStatus});
-
+        return res.status(200).json({
+            message: `Usuario ${status ? 'activado' : 'suspendido'}`, 
+            data: updateStatus
+        });
+       
     } catch (error) {
         res.status(500).json({
             message: "Error al suspender usuario"
@@ -101,10 +103,14 @@ const deleteUserById = async (req, res) => {
         const deletedUser = await User.findByIdAndDelete(id).select('-password')
 
         if (deletedUser === null) {
-            return res.status(400).json({message: "Usuario no encontrado"})
+            return res.status(404).json({
+                message: "Usuario no encontrado"
+            })
         } 
 
-        return res.status(200).json({message: "Usuario eliminado"})
+        return res.status(200).json({
+            message: "Usuario eliminado"
+        })
 
     } catch (error) {
         res.status(500).json({message: "Error al eliminar el usuario"})
