@@ -67,11 +67,6 @@ const statusUser = async (req, res) => {
     try {
         const { status } = req.body
 
-        if(typeof status !== 'boolean'){
-            res.status(400)
-            return res.json({message: "El campo status debe ser true o false"})
-        }
-
         const updateStatus = await User.findByIdAndUpdate(
             req.params.id,
             { status },

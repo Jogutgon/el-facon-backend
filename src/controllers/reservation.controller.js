@@ -88,7 +88,6 @@ const availableReservation = async (req, res) => {
 }
 
 
-//traer la reserva del usuario logueado
 const getReservation = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -185,7 +184,7 @@ const updateReservation = async (req, res) => {
         const updateReserv = await Reservation.findByIdAndUpdate(
             id, 
             updateData,
-            { returnDoc: 'after', 
+            { new: true, 
                 runValidators: true
             }
         );
