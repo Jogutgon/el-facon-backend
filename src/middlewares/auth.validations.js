@@ -13,7 +13,6 @@ const verifyJWT = (req, res, next) => {
        if(err) {
         return res.status(401).json({message: 'Token invalido'});
        } 
-       //si el token es valido, se guardan los datos del usuario en req
        req.user = decoded;
        next();
     })

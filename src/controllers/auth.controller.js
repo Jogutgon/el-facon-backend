@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const JWT_SECRET = require('../common/constants')
 
 const registerUser = async (req, res) => {
-    //campos de donde vienen los datos
+    try {
     const {
         username,
         password,
@@ -13,12 +13,10 @@ const registerUser = async (req, res) => {
         lastName
     } = req.body
 
-    //encriptar password
     const salt = bcrypt.genSaltSync(8);
     const hashedPassword = bcrypt.hashSync(password, salt);
     console.log( salt, password, hashedPassword)
 
-    //creacion del usuario
     const user = new User({
         username, 
         password: hashedPassword,
@@ -28,31 +26,34 @@ const registerUser = async (req, res) => {
     })
 
     await user.save()
-
-    res.json({message: "usuario creado"})
-
-    //generar estado
+    return res.status(201).json({message: "Usuario creado"})
+    } catch (error) {
+        return res.status(500).json({
+            message: "Error al registrar usuario"
+        });
+    }
 }
 
 const loginUser = async (req, res) => {
-    const {
+   try {
+     const {
         email,
         password
     } = req.body
 
-    //comprobar si existe el usuario
-    const user = await User.findOne({ email })
-    if (user === null){
-        //estado
-        return res.json({ message: "Usuario no encontrado"})
+    const user = await User.findOne({ email });
+    if (!user){
+        return res.status(401).json({ 
+            message: "Credenciales inválidas"
+        });
     }
 
-    //comparar password con bcrypt
-    const isMatch = bcrypt.compareSync(password, user.password)
+    const isMatch = bcrypt.compareSync(password, user.password);
 
     if(!isMatch) {
-        res.status(401)
-        return res.json({ message: "Sin autorización" })
+        return res.status(401).json({ 
+            message: "Credenciales inválidas"
+        });        
     }
 
     const token = jwt.sign({
@@ -61,10 +62,14 @@ const loginUser = async (req, res) => {
         isAdmin: user.isAdmin
     }, JWT_SECRET);
 
-    res.status(200)
-    res.json({
+    res.status(200).json({
         access_token: token
-    })
+    });
+   } catch (error) {
+    return res.status(500).json({
+        message: "Error al iniciar sesión"
+    });
+   }
 }
 
 

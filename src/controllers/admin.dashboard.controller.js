@@ -7,7 +7,7 @@ const adminDashboard = async (req, res) => {
         const totalReservations = await Reservation.countDocuments();
         const inactiveUsers = await User.countDocuments({ status: false });
 
-        res.json({
+        return res.status(200).json({
             totalUsers,
             totalReservations,
             inactiveUsers
