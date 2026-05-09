@@ -8,7 +8,6 @@ const createReservation = async (req, res) => {
             guests
         } = req.body
 
-
         const today = new Date();
         today.setHours(0, 0, 0, 0)
 
@@ -25,9 +24,9 @@ const createReservation = async (req, res) => {
         maxDate.setDate(maxDate.getDate() + 3);
         maxDate.setHours(23, 59, 59, 999)
 
-        if (onlyDate < today) { //fecha menor a fecha de hoy
+        if (onlyDate < today) { 
             res.status(400)
-            return res.json({ messasge: "No podes reservar fechas pasadas" })
+            return res.json({ message: "No podes reservar fechas pasadas" })
         }
 
         if (selectDate > maxDate) {
@@ -59,8 +58,6 @@ const createReservation = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error al crear la reserva" })
     }
-
-
 }
 
 
@@ -75,39 +72,31 @@ const availableReservation = async (req, res) => {
             "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"
         ];
 
-
         const reservationsDate = await Reservation.find({ date })
-
-
         const reservedTimes = reservationsDate.map(reserv => reserv.time)
-
         const availableTime = fixedHours.map(time => ({
             time,
             available: !reservedTimes.includes(time)
         }));
 
-
-        res.json(availableTime);
+        return res.status(200).json(availableTime);
 
     } catch (error) {
-        res.status(500).json({ mensaje: "No se pudo mostrar la disponibilidad" })
+        res.status(500).json({ message: "No se pudo mostrar la disponibilidad" })
         console.error({ message: "No se pudo mostrar la disponibilidad" })
     }
-
 }
 
 
-//traer la reserva del usuario logueado
 const getReservation = async (req, res) => {
     try {
         const userId = req.user.id;
-
         const reservations = await Reservation.find({ user: userId });
-
-        res.json(reservations)
-
+        return res.status(200).json(reservations);
     } catch (error) {
-
+        return res.status(500).json({
+            message: "Error al obtener reservas"
+        });
     }
 }
 
@@ -120,17 +109,16 @@ const deleteReservationById = async (req, res) => {
             return res.json({ message: "Reserva no encontrada" })
         }
 
-         
         if(reservation.user.toString() !== req.user.id){
             res.status(403)
             return res.json({message: "No autorizado"})
         }
-        
-       
+
         const filters = { _id: req.params.id }
         await Reservation.deleteOne(filters)
-        res.json({ message: "Reserva cancelada" })
-
+        return res.status(200).json({ 
+            message: "Reserva cancelada"
+        });
     } catch (error) {
         res.status(500)
         return res.json({message: "Error al cancelar la reserva"})
@@ -139,11 +127,8 @@ const deleteReservationById = async (req, res) => {
 
 const AllReservations = async (req, res) => {
     try {
-        
         const { date, time, guests, firstName, lastName } = req.query;
-
         const filter = {};
-
         if(date) {
             const startOfDay = new Date(date);
             const endOfDay = new Date(date);
@@ -153,7 +138,6 @@ const AllReservations = async (req, res) => {
 
         if(time) filter.time = time;
         if(guests) filter.guests = Number(guests);
-
         let reservations = await Reservation.find(filter)
         .populate('user', 'firstName lastName');
 
@@ -177,20 +161,17 @@ const AllReservations = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({message: "ERROR AL BUSCAR RESERVAS"})
-    }
-    
+    }  
 }
 
 const updateReservation = async (req, res) => {
     try {
         const { id } = req.params
         const { date, time, guests} = req.body
-
         const updateData = {};
 
         if(date !== undefined) updateData.date = date;
         if(time !== undefined) updateData.time = time;
-
         if(guests !== undefined) {
             if(guests < 2 || guests > 10) {
                 return res.status(400).json({
@@ -223,32 +204,26 @@ const updateReservation = async (req, res) => {
        return res.status(500).json({
         message: "ERROR AL ACTUALIZAR RESERVA"}) 
     }
-
 }
-
 
 const deleteReservationByAdmin = async (req, res) => {
         try {
             const { id } = req.params;
-
             const reservation = await Reservation.findByIdAndDelete(id);
-
             if(!reservation) {
                 return res.status(404).json({
                     message: "Reserva no encontrada"
                 })
             }
-            
             return res.status(200).json({
                 message: "Reserva eliminada"
             })
 
         } catch (error) {
             console.error(error)
-            res.status(500).json({
+            return res.status(500).json({
                 message: "ERROR AL ELIMINAR LA RESERVA"
             })
-            
         }
     }
 
