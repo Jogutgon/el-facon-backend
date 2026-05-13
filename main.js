@@ -11,7 +11,12 @@ const createAdmin = require('./src/utils/createAdmin')
 
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://el-facon-frontend.vercel.app"
+    ]
+}))
 const port = process.env.PORT || 7000
 
 app.use(express.json())
