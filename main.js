@@ -33,8 +33,7 @@ mongoose.connect(process.env.MONGO_URI)
         app.listen(port, '0.0.0.0', () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
-        
-        
-        
     })
-    .catch(()=> console.log('NO SE PUDO CONECTAR LA APP CON LA BD'))
+    .catch((err)=> {console.error('ERROR CON MONGOBD:', err)
+        process.exit(1)
+    })
