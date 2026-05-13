@@ -50,6 +50,12 @@ Los administradores tendrán acceso a funcionalidades que les permitirán gestio
 	MONGO_URI=tu_uri_de_mongodb
 	JWT_SECRET=tu_clave_secreta
 
+### Administrador
+- createAdmin() permite crear automaticamente al administrador de la pagina, con un mail y contraseñas
+  predeterminados. 
+- La funcion se aloja en la carpeta "utils" > "createAdmin.js"
+- Aqui puede modificarse el mail del administrador y su contraseña
+
 ### Autor 
 - Josefina Gutierrez Gonzalez
 - Proyecto desarrollado como trabajo final para la práctica de desarrollo web utlizando React y Node.js
