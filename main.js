@@ -12,7 +12,7 @@ const createAdmin = require('./src/utils/createAdmin')
 
 const app = express()
 app.use(cors())
-const port = 7000
+const port = process.env.PORT || 7000
 
 app.use(express.json())
 
@@ -30,7 +30,7 @@ mongoose.connect(process.env.MONGO_URI)
 
         createAdmin()
 
-        app.listen(port, () => {
+        app.listen(port, '0.0.0.0', () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
         

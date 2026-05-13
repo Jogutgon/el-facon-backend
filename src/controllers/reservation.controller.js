@@ -2,6 +2,13 @@ const Reservation = require("../models/reservation.model")
 
 const createReservation = async (req, res) => {
     try {
+
+        if(!req.user.status) {
+            return res.status(403).json({
+                message: 'Tu cuenta está suspendida. No podes realizar reservas.'
+            })
+        }
+
         const {
             date,
             time,

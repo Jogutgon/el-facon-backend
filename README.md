@@ -37,7 +37,7 @@ Los administradores tendrán acceso a funcionalidades que les permitirán gestio
   npm run dev
 
 - El servidor se ejecutará por defecto en:
-	http://localhost:8000
+	http://localhost:7000
 
 ### Conexión con el frontend
 - Este backend provee una API REST que es consumida por el frontend desarrollado con React.
