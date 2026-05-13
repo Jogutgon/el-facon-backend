@@ -30,7 +30,7 @@ mongoose.connect(process.env.MONGO_URI)
 
         createAdmin()
 
-        app.listen(port, () => {
+        app.listen(port, '0.0.0.0', () => {
             console.log(`Aplicacion ejecutandose en puerto ${port}`)
         })
         
