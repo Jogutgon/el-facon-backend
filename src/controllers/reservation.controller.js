@@ -175,6 +175,23 @@ const updateReservation = async (req, res) => {
     try {
         const { id } = req.params
         const { date, time, guests} = req.body
+
+        const reservation = await Reservation.findById(id);
+        if(!reservation){
+            return res.status(404).json({
+                message: 'Reserva no encontrada'
+            });
+        }
+
+        const reservationDateTime = new Date(
+            `${reservation.date.toISOString().split('T')[0]}T${reservation.time}`
+        );
+        if(reservationDateTime < new Date()){
+            return res.status(400).json({
+                message: 'No se pueden modificar reservas pasadas'
+            });
+        }
+        
         const updateData = {};
 
         if(date !== undefined) updateData.date = date;
@@ -198,13 +215,14 @@ const updateReservation = async (req, res) => {
 
         if(!updateReserv){
             return res.status(404).json({
-                message: "Reserva no encontrada"
-            })
+                message: 'Reserva no encontrada'
+            });
         }
 
         return res.status(200).json({
-            message: "Reserva actualizada", data: updateReserv
-        })
+            message: "Reserva actualizada", 
+            data: updateReserv
+        });
 
     } catch (error) {
        console.error(error)
